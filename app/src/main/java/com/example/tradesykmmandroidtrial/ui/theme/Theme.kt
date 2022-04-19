@@ -1,41 +1,28 @@
 package com.example.tradesykmmandroidtrial.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-
-private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
-)
-
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
-)
+import com.example.tradesykmmandroidtrial.AppThemeState
+import com.google.accompanist.systemuicontroller.SystemUiController
 
 @Composable
 fun TradesyKMMAndroidTrialTheme(
+    systemUiController: SystemUiController? = null,
+    appThemeState: AppThemeState? = null,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
+    val isDarkTheme = (appThemeState?.isSystemModeEnable == false
+            && appThemeState.isDarkTheme) || darkTheme
+    val colorPalette = appThemeState?.colorPalette ?: ColorPalette.Pebble
+    val colors = getAppThemeColors(isDarkTheme, colorPalette)
+
+    systemUiController?.apply {
+        setStatusBarColor(color = colors.primary, darkIcons = darkTheme)
+        setNavigationBarColor(color = colors.primary, darkIcons = darkTheme)
+        setSystemBarsColor(color = colors.primary, darkIcons = darkTheme)
     }
 
     MaterialTheme(
@@ -44,4 +31,38 @@ fun TradesyKMMAndroidTrialTheme(
         shapes = Shapes,
         content = content
     )
+}
+
+fun getAppThemeColors(
+    isDarkTheme: Boolean,
+    colorPalette: ColorPalette
+): Colors {
+    val colors = if (isDarkTheme) {
+        when (colorPalette) {
+            ColorPalette.Bamboo -> DarkBambooColorPalette
+            ColorPalette.Coral -> DarkCoralColorPalette
+            ColorPalette.Fuji -> DarkFujiColorPalette
+            ColorPalette.Jade -> DarkJadeColorPalette
+            ColorPalette.Orenji -> DarkOrenjiColorPalette
+            ColorPalette.Pebble -> DarkPebbleColorPalette
+            ColorPalette.Sakura -> DarkSakuraColorPalette
+            ColorPalette.Sand -> DarkSandColorPalette
+            ColorPalette.Sun -> DarkSunColorPalette
+            ColorPalette.Wave -> DarkWaveColorPalette
+        }
+    } else {
+        when (colorPalette) {
+            ColorPalette.Bamboo -> LightBambooColorPalette
+            ColorPalette.Coral -> LightCoralColorPalette
+            ColorPalette.Fuji -> LightFujiColorPalette
+            ColorPalette.Jade -> LightJadeColorPalette
+            ColorPalette.Orenji -> LightOrenjiColorPalette
+            ColorPalette.Pebble -> LightPebbleColorPalette
+            ColorPalette.Sakura -> LightSakuraColorPalette
+            ColorPalette.Sand -> LightSandColorPalette
+            ColorPalette.Sun -> LightSunColorPalette
+            ColorPalette.Wave -> LightWaveColorPalette
+        }
+    }
+    return colors
 }
